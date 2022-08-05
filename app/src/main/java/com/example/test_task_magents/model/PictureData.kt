@@ -1,7 +1,6 @@
 package com.example.test_task_magents.model
 
-data class PictureData(
-    val author : String,
-    val id : String,
-    val url : String,
-    val favorite : Boolean)
+data class PictureData(val id : String,
+                       val author : String,
+                       val url : String,
+                       val favorite : Boolean)

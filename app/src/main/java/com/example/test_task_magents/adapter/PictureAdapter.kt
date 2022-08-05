@@ -1,7 +1,10 @@
 package com.example.test_task_magents.adapter
 
+import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +12,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
@@ -17,10 +21,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.example.test_task_magents.model.PictureData
 import com.example.test_task_magents.R
+import com.example.test_task_magents.model.PictureData
+import com.example.test_task_magents.util.ConvertClass
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
-import org.w3c.dom.Text
+import kotlinx.coroutines.launch
+
 
 class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureData> ) : RecyclerView.Adapter<PictureAdapter.PictureViewHolder>() {
     inner class PictureViewHolder(v: View):RecyclerView.ViewHolder(v){
@@ -28,6 +36,8 @@ class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureDat
         val author = v.findViewById<TextView>(R.id.textview_author)
         val idPicture = v.findViewById<TextView>(R.id.textview_id_picture)
     }
+
+    lateinit var sharedPreferences : SharedPreferences
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -40,11 +50,14 @@ class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureDat
         val imageBitmap = v.findViewById<ImageView>(R.id.id_image_picture)
         val favoriteIcon = v.findViewById<ImageView>(R.id.icon_favorite)
 
-        setFavorite(isFavorite, idPicture as String, author as String, imageBitmap, favoriteIcon)
+        setFavorite(isFavorite, idPicture as String, author as String, favoriteIcon)
 
         v.findViewById<ImageView>(R.id.id_image_picture).setOnClickListener {
             isFavorite = !isFavorite
-            setFavorite(isFavorite, idPicture, author, imageBitmap, favoriteIcon)
+            setFavorite(isFavorite, idPicture, author, favoriteIcon)
+            CoroutineScope(Dispatchers.Unconfined).launch {
+                downloadImage(isFavorite, idPicture, author, imageBitmap)
+            }
         }
         return PictureViewHolder(v)
     }
@@ -53,7 +66,6 @@ class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureDat
                 isFavorite: Boolean,
                 idPicture: String,
                 author: String,
-                imageBitmap: ImageView,
                 favoriteIcon: ImageView) {
         favoriteIcon.setImageDrawable(ContextCompat.getDrawable(context.requireContext(), R.drawable.ic_baseline_favorite_border_24))
         favoriteIcon.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_ATOP)
@@ -75,13 +87,14 @@ class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureDat
                                     isFavorite: Boolean,
                                     idPicture: String,
                                     author: String,
-                                    imageBitmap: ImageView) {
+                                    image: ImageView) {
         return coroutineScope {
             if(isFavorite) {
-                // Скачиваем
+
+
             }
             else {
-                // Удаляю из кеша
+
             }
         }
     }

@@ -10,8 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test_task_magents.adapter.PictureAdapter
 import com.example.test_task_magents.databinding.RandomPictureFragmentBinding
+import com.example.test_task_magents.model.GetPictureData
 import com.example.test_task_magents.model.PictureData
+import com.example.test_task_magents.retrofit.RetrofitIntenace
+import com.example.test_task_magents.retrofit.ServiceApi
 import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import kotlin.random.Random
 
 
@@ -23,6 +29,8 @@ class RandomPictureFragment : Fragment() {
     private lateinit var recv : RecyclerView
     private var pictureList : ArrayList<PictureData> = ArrayList()
     private lateinit var pictureAdapter: PictureAdapter
+    private val pages : MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,21 +45,48 @@ class RandomPictureFragment : Fragment() {
 
         recv.layoutManager = LinearLayoutManager(activity)
         recv.adapter = pictureAdapter
-
-        CoroutineScope(Dispatchers.Unconfined).launch{
-            for (i in 0..1000) {
-                onAddField()
+        downloadAndDisplay()
+        recv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    downloadAndDisplay()
+                }
             }
-        }
-
+        })
         return binding.root
     }
 
 
+    private fun downloadAndDisplay() {
+        if(pages.size == 0) return
+        val serviceApi = RetrofitIntenace.getRetrofit().create(ServiceApi::class.java)
 
-    private suspend fun onAddField() {
+        val value = pages[Random.nextInt(0, pages.size)]
+        pages.remove(value)
+
+        val call : Call<List<GetPictureData>> = serviceApi.getPicture(value, 100)
+
+        call.enqueue(object : Callback<List<GetPictureData>> {
+            override fun onResponse(
+                call: Call<List<GetPictureData>>,
+                response: Response<List<GetPictureData>>) {
+                CoroutineScope(Dispatchers.Unconfined).launch {
+                    for (item in response.body()!!) {
+                        onAddField(item.id, item.author, item.download_url)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<List<GetPictureData>>, t: Throwable) {
+
+            }
+        })
+
+    }
+    private suspend fun onAddField(id : String, author : String, url : String) {
         return coroutineScope {
-            pictureList.add(PictureData("Daniel Ebersole", "117", "https://picsum.photos/200/300?random=" + Random.nextInt(), false))
+            pictureList.add(PictureData(id, author, url, false))
             pictureAdapter.notifyDataSetChanged()
         }
     }

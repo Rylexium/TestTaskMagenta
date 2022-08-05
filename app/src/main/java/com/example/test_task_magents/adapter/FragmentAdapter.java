@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.test_task_magents.FavoritePictureFragment;
 import com.example.test_task_magents.RandomPictureFragment;
+import com.example.test_task_magents.model.GetPictureData;
 
 public class FragmentAdapter extends FragmentStateAdapter {
 
