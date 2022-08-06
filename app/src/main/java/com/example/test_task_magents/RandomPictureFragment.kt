@@ -62,10 +62,10 @@ class RandomPictureFragment : Fragment() {
         if(pages.size == 0) return
         val serviceApi = RetrofitIntenace.getRetrofit().create(ServiceApi::class.java)
 
-        val value = pages[Random.nextInt(0, pages.size)]
-        pages.remove(value)
+        val page = pages[Random.nextInt(0, pages.size)]
+        pages.remove(page)
 
-        val call : Call<List<GetPictureData>> = serviceApi.getPicture(value, 100)
+        val call : Call<List<GetPictureData>> = serviceApi.getPicture(page, 100)
 
         call.enqueue(object : Callback<List<GetPictureData>> {
             override fun onResponse(

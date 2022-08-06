@@ -1,8 +1,7 @@
 package com.example.test_task_magents.adapter
 
-import android.content.SharedPreferences
-import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Picture
 import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
@@ -22,6 +20,9 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.test_task_magents.R
+import com.example.test_task_magents.db.FavoritePictureDatabase
+import com.example.test_task_magents.db.model.FavoritePicture
+import com.example.test_task_magents.db.repository.FavoritePictureRealization
 import com.example.test_task_magents.model.PictureData
 import com.example.test_task_magents.util.ConvertClass
 import kotlinx.coroutines.CoroutineScope
@@ -35,69 +36,16 @@ class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureDat
         val imagePicture = v.findViewById<ImageView>(R.id.id_image_picture)
         val author = v.findViewById<TextView>(R.id.textview_author)
         val idPicture = v.findViewById<TextView>(R.id.textview_id_picture)
+        val favoriteIcon = v.findViewById<ImageView>(R.id.icon_favorite)
     }
-
-    lateinit var sharedPreferences : SharedPreferences
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val v = inflater.inflate(R.layout.field_of_picture, parent, false)
 
-        var isFavorite = false
-
-        val idPicture = v.findViewById<TextView>(R.id.textview_id_picture).text
-        val author = v.findViewById<TextView>(R.id.textview_author).text
-        val imageBitmap = v.findViewById<ImageView>(R.id.id_image_picture)
-        val favoriteIcon = v.findViewById<ImageView>(R.id.icon_favorite)
-
-        setFavorite(isFavorite, idPicture as String, author as String, favoriteIcon)
-
-        v.findViewById<ImageView>(R.id.id_image_picture).setOnClickListener {
-            isFavorite = !isFavorite
-            setFavorite(isFavorite, idPicture, author, favoriteIcon)
-            CoroutineScope(Dispatchers.Unconfined).launch {
-                downloadImage(isFavorite, idPicture, author, imageBitmap)
-            }
-        }
         return PictureViewHolder(v)
     }
 
-    private fun setFavorite(
-                isFavorite: Boolean,
-                idPicture: String,
-                author: String,
-                favoriteIcon: ImageView) {
-        favoriteIcon.setImageDrawable(ContextCompat.getDrawable(context.requireContext(), R.drawable.ic_baseline_favorite_border_24))
-        favoriteIcon.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_ATOP)
-        if(isFavorite) {
-            favoriteIcon.setImageDrawable(ContextCompat.getDrawable(context.requireContext(), R.drawable.ic_baseline_favorite_24))
-            favoriteIcon.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
-
-            Toast.makeText(context.activity, "Тебе нравится?!!?!?! "
-                    + idPicture + " "
-                    + author, Toast.LENGTH_SHORT).show()
-        }
-        else {
-            favoriteIcon.setImageDrawable(ContextCompat.getDrawable(context.requireContext(), R.drawable.ic_baseline_favorite_border_24))
-            favoriteIcon.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_ATOP)
-        }
-    }
-
-    private suspend fun downloadImage(
-                                    isFavorite: Boolean,
-                                    idPicture: String,
-                                    author: String,
-                                    image: ImageView) {
-        return coroutineScope {
-            if(isFavorite) {
-
-
-            }
-            else {
-
-            }
-        }
-    }
 
     override fun onBindViewHolder(holder: PictureViewHolder, position: Int) {
         val newList = pictureList[position]
@@ -113,11 +61,71 @@ class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureDat
             .withStartAction { holder.imagePicture.visibility = View.VISIBLE }
             .alpha(1f)
             .setInterpolator(AccelerateDecelerateInterpolator())
-            .setDuration(250)
+            .setDuration(100)
             .start()
+
+        var isFavorite = false
+        holder.imagePicture.setOnClickListener {
+            isFavorite = !isFavorite
+            setFavorite(isFavorite, holder.favoriteIcon)
+            CoroutineScope(Dispatchers.Unconfined).launch {
+                downloadImage(isFavorite, holder.idPicture.text.toString(), holder.author.text.toString(), holder.imagePicture)
+            }
+        }
+
+        if(newList.favorite)
+            setFavorite(true, holder.favoriteIcon)
     }
 
     override fun getItemCount(): Int {
         return pictureList.size
     }
+    private fun setFavorite(
+        isFavorite: Boolean,
+        favoriteIcon: ImageView) {
+        favoriteIcon.setImageDrawable(ContextCompat.getDrawable(context.requireContext(), R.drawable.ic_baseline_favorite_border_24))
+        favoriteIcon.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_ATOP)
+        if(isFavorite) {
+            favoriteIcon.setImageDrawable(ContextCompat.getDrawable(context.requireContext(), R.drawable.ic_baseline_favorite_24))
+            favoriteIcon.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
+        }
+        else {
+            favoriteIcon.setImageDrawable(ContextCompat.getDrawable(context.requireContext(), R.drawable.ic_baseline_favorite_border_24))
+            favoriteIcon.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_ATOP)
+        }
+    }
+
+
+
+//    private lateinit var repo : FavoritePictureRealization
+//
+//    fun initDatabase() {
+//        val daoFavoritePicture = FavoritePictureDatabase
+//            .getInstance(context.requireContext())
+//            .getFavoritePictureDao()
+//        repo = FavoritePictureRealization(daoFavoritePicture)
+//    }
+
+
+    private suspend fun downloadImage(
+        isFavorite: Boolean,
+        idPicture: String,
+        author: String,
+        image: ImageView) {
+        return coroutineScope {
+            if(isFavorite) {
+//                initDatabase()
+//                repo.insertFavoritePicture(
+//                    FavoritePicture(idPicture, author,
+//                        ConvertClass.convertBitmapToString((image.drawable as BitmapDrawable).bitmap)))
+//                println(repo.allFavoritePicture)
+            }
+            else {
+//                repo.deleteFavoritePicture(
+//                    FavoritePicture(idPicture, author,
+//                        ConvertClass.convertBitmapToString((image.drawable as BitmapDrawable).bitmap)))
+            }
+        }
+    }
+
 }
