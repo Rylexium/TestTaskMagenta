@@ -90,7 +90,7 @@ class RandomPictureFragment : Fragment() {
 
         val serviceApi = RetrofitIntenace.getRetrofit().create(ServiceApi::class.java)
 
-        val page = pages[Random.nextInt(0, pages.size)]
+        val page = pages[(0..pages.size).random()]
         pages.remove(page)
 
         val call : Call<List<GetPictureData>> = serviceApi.getPicture(page, 100)
