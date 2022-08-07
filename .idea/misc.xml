@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.1595" />
+        <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.1595" />
         <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/drawable/tab_header.xml" value="0.196" />
         <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/layout/activity_main.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/layout/favorite_picture_fragment.xml" value="0.18802083333333333" />

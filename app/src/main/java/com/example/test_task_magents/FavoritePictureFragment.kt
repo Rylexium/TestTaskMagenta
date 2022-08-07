@@ -35,14 +35,12 @@ class FavoritePictureFragment : Fragment() {
         Toast.makeText(context, "Favorite", Toast.LENGTH_SHORT).show()
 
         initComponents()
-        showFavoritePictures()
 
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-        pictureList.clear()
         showFavoritePictures()
     }
 
@@ -54,15 +52,33 @@ class FavoritePictureFragment : Fragment() {
         recv.adapter = favoritePictureAdapter
     }
 
+    private fun clearFavoritePicture() {
+        pictureList.clear()
+        Handler(Looper.getMainLooper()).post {
+            favoritePictureAdapter.notifyDataSetChanged()
+        }
+    }
+
     private fun showFavoritePictures() {
         CoroutineScope(Dispatchers.IO).launch {
             Handler(Looper.getMainLooper()).post {
                 binding.progressDownloadPicture.visibility = View.VISIBLE
             }
             val data = getAllFavoritePicture()
-                for (picture in data) {
-                    addFieldFavoritePicture(picture.id.toString(), picture.author, picture.picture)
-                }
+
+            if(pictureList.hashCode() == data.hashCode()) { // hash равны если не было изменений
+                Handler(Looper.getMainLooper()).postDelayed({
+                    binding.progressDownloadPicture.visibility = View.GONE
+                }, 250)
+                return@launch
+            }
+
+            clearFavoritePicture()
+
+
+            for (picture in data)
+                addFieldFavoritePicture(picture.id.toString(), picture.author, picture.picture)
+
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.progressDownloadPicture.visibility = View.GONE
             }, 250)

@@ -41,7 +41,6 @@ suspend fun checkFavoritePicture(id: Int) : Boolean {
 
         for(picture in repo!!) {
             if(id == picture.id){
-                println("id : $id picture.id : ${picture.id}")
                 it.resume(true)
                 return@suspendCoroutine
             }
@@ -55,15 +54,11 @@ fun setFavorite(fragment: Fragment,
                         favoriteIcon: ImageView
 ) {
     favoriteIcon.setImageDrawable(ContextCompat.getDrawable(fragment.requireContext(), R.drawable.ic_baseline_favorite_border_24))
-    favoriteIcon.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_ATOP)
-    if(isFavorite) {
+    if(isFavorite)
         favoriteIcon.setImageDrawable(ContextCompat.getDrawable(fragment.requireContext(), R.drawable.ic_baseline_favorite_24))
-        favoriteIcon.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
-    }
-    else {
+    else
         favoriteIcon.setImageDrawable(ContextCompat.getDrawable(fragment.requireContext(), R.drawable.ic_baseline_favorite_border_24))
-        favoriteIcon.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_ATOP)
-    }
+
 }
 
 suspend fun downloadImage(isFavorite: Boolean,

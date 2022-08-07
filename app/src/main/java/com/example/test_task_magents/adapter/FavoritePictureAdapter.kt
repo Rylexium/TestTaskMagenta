@@ -16,6 +16,7 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.test_task_magents.R
+import com.example.test_task_magents.RandomPictureFragment
 import com.example.test_task_magents.db.model.FavoritePicture
 import com.example.test_task_magents.downloadImage
 import com.example.test_task_magents.setFavorite
@@ -64,7 +65,7 @@ class FavoritePictureAdapter(val context: Fragment, private val pictureList:Arra
             pictureList.removeAt(position)
             notifyDataSetChanged()
             CoroutineScope(Dispatchers.Unconfined).launch {
-                downloadImage(true, holder.idPicture.text.toString(), holder.author.text.toString(), holder.imagePicture)
+                downloadImage(false, holder.idPicture.text.toString(), holder.author.text.toString(), holder.imagePicture)
             }
         }
     }

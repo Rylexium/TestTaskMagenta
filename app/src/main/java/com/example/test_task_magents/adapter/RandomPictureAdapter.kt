@@ -59,11 +59,9 @@ class RandomPictureAdapter(val context: Fragment, val pictureList:ArrayList<Pict
 
         var isFavorite = false
         CoroutineScope(Dispatchers.IO).launch {
-            if(checkFavoritePicture(holder.idPicture.text.toString().toInt())) {
-                Handler(Looper.getMainLooper()).post {
-                    println(holder.idPicture.text.toString())
-                    setFavorite(context, true, holder.favoriteIcon)
-                }
+            isFavorite = checkFavoritePicture(holder.idPicture.text.toString().toInt())
+            Handler(Looper.getMainLooper()).post {
+                setFavorite(context, isFavorite, holder.favoriteIcon)
             }
         }
 
@@ -82,8 +80,5 @@ class RandomPictureAdapter(val context: Fragment, val pictureList:ArrayList<Pict
     override fun getItemCount(): Int {
         return pictureList.size
     }
-
-
-
 
 }
