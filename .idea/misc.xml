@@ -6,8 +6,11 @@
         <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/drawable/tab_header.xml" value="0.196" />
         <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/layout/activity_main.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/layout/favorite_picture_fragment.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/layout/field_of_empty.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/layout/field_of_picture.xml" value="0.33" />
+        <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/layout/field_of_progressbar.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/aleks/AndroidStudioProjects/TestTaskMagents/app/src/main/res/layout/random_picture_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/aleks/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/activity_list_item.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>

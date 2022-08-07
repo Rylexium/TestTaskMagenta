@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "favorite_picture")
 data class FavoritePicture(
     @PrimaryKey(autoGenerate = false)
-    val id : Int,
-    val author : String,
-    val picture : String)
+    val id: Int,
+    val author: String,
+    val picture: String)

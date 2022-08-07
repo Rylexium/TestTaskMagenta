@@ -5,19 +5,23 @@
     android:layout_height="match_parent"
     tools:context=".RandomPictureFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/random_picture_recycler_view"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/random_picture_recycler_view"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
 
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        />
+        <ProgressBar
+            android:id="@+id/progress_download_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/black"
+            android:layout_gravity="top"
+            android:layout_marginTop="150dp"
+            />
 
 </FrameLayout>

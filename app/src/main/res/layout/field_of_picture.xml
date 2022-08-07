@@ -36,13 +36,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/textview_author"
-                android:text="Автор : Азизов Алексей"
+                android:text="Азизов Алексей"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/textview_id_picture"
-                android:text="id : 123"
+                android:text="123"
                 />
         </LinearLayout>
         <ImageView
