@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test_task_magents.adapter.PictureAdapter
 import com.example.test_task_magents.databinding.RandomPictureFragmentBinding
+import com.example.test_task_magents.db.model.FavoritePicture
 import com.example.test_task_magents.model.GetPictureData
 import com.example.test_task_magents.model.PictureData
 import com.example.test_task_magents.retrofit.RetrofitIntenace
@@ -18,6 +19,8 @@ import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.random.Random
 
 
@@ -90,4 +93,5 @@ class RandomPictureFragment : Fragment() {
             pictureAdapter.notifyDataSetChanged()
         }
     }
+
 }

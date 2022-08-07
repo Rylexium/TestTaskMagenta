@@ -7,13 +7,11 @@ class FavoritePictureRealization(private val favoritePictureDao : FavoritePictur
     override val allFavoritePicture: List<FavoritePicture>
         get() = favoritePictureDao.getAll()
 
-    override suspend fun insertFavoritePicture(
-        favoritePicture: FavoritePicture,
-    ) {
+    override suspend fun insertFavoritePicture(favoritePicture: FavoritePicture) {
         favoritePictureDao.insert(favoritePicture)
     }
 
-    override suspend fun deleteFavoritePicture(favoritePicture: FavoritePicture) {
-        favoritePictureDao.delete(favoritePicture)
+    override suspend fun deleteFavoritePicture(id : Int) {
+        favoritePictureDao.deleteById(id)
     }
 }

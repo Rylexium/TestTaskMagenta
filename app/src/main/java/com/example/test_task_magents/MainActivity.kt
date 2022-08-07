@@ -5,6 +5,9 @@ import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
 import com.example.test_task_magents.adapter.FragmentAdapter
 import com.google.android.material.tabs.TabLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,11 +24,11 @@ class MainActivity : AppCompatActivity() {
         tabLayout = findViewById(R.id.tabLayout)
         viewPager2 = findViewById(R.id.viewPager2)
 
-        viewPager2.adapter =
-            FragmentAdapter(
-                supportFragmentManager,
-                lifecycle
-            )
+        CoroutineScope(Dispatchers.IO).launch {
+            initDatabase(this@MainActivity.applicationContext)
+        }
+
+        viewPager2.adapter = FragmentAdapter(supportFragmentManager, lifecycle)
 
         tabLayout.addTab(tabLayout.newTab().setText("Рандомные картинки"))
         tabLayout.addTab(tabLayout.newTab().setText("Любимые картинки"))
@@ -39,6 +42,6 @@ class MainActivity : AppCompatActivity() {
         viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) { tabLayout.selectTab(tabLayout.getTabAt(position)) }
         })
-
     }
+
 }

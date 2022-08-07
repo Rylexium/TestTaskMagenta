@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.graphics.Picture
 import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,12 +25,15 @@ import com.example.test_task_magents.R
 import com.example.test_task_magents.db.FavoritePictureDatabase
 import com.example.test_task_magents.db.model.FavoritePicture
 import com.example.test_task_magents.db.repository.FavoritePictureRealization
+import com.example.test_task_magents.favoritePictureRepository
 import com.example.test_task_magents.model.PictureData
 import com.example.test_task_magents.util.ConvertClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureData> ) : RecyclerView.Adapter<PictureAdapter.PictureViewHolder>() {
@@ -65,6 +70,18 @@ class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureDat
             .start()
 
         var isFavorite = false
+        CoroutineScope(Dispatchers.IO).launch {
+            if(checkFavoritePicture(holder.idPicture.text.toString().toInt())) {
+                isFavorite = true
+                for(item in repo!!) {
+                    println(item.id)
+                }
+                Handler(Looper.getMainLooper()).post {
+                    setFavorite(isFavorite, holder.favoriteIcon)
+                }
+            }
+        }
+
         holder.imagePicture.setOnClickListener {
             isFavorite = !isFavorite
             setFavorite(isFavorite, holder.favoriteIcon)
@@ -73,9 +90,24 @@ class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureDat
             }
         }
 
-        if(newList.favorite)
-            setFavorite(true, holder.favoriteIcon)
     }
+
+    private var repo: List<FavoritePicture>? = null
+    private suspend fun checkFavoritePicture(id: Int) : Boolean {
+        return suspendCoroutine {
+            if(repo == null)
+                repo = favoritePictureRepository.allFavoritePicture
+
+            for(picture in repo!!) {
+                if(id == picture.id){
+                    it.resume(true)
+                    return@suspendCoroutine
+                }
+            }
+            it.resume(false)
+        }
+    }
+
 
     override fun getItemCount(): Int {
         return pictureList.size
@@ -97,16 +129,6 @@ class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureDat
 
 
 
-//    private lateinit var repo : FavoritePictureRealization
-//
-//    fun initDatabase() {
-//        val daoFavoritePicture = FavoritePictureDatabase
-//            .getInstance(context.requireContext())
-//            .getFavoritePictureDao()
-//        repo = FavoritePictureRealization(daoFavoritePicture)
-//    }
-
-
     private suspend fun downloadImage(
         isFavorite: Boolean,
         idPicture: String,
@@ -114,16 +136,15 @@ class PictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureDat
         image: ImageView) {
         return coroutineScope {
             if(isFavorite) {
-//                initDatabase()
-//                repo.insertFavoritePicture(
-//                    FavoritePicture(idPicture, author,
-//                        ConvertClass.convertBitmapToString((image.drawable as BitmapDrawable).bitmap)))
-//                println(repo.allFavoritePicture)
+                favoritePictureRepository.insertFavoritePicture(
+                    FavoritePicture(idPicture.toInt(), author,
+                        ConvertClass.convertBitmapToString((image.drawable as BitmapDrawable).bitmap)))
             }
             else {
-//                repo.deleteFavoritePicture(
-//                    FavoritePicture(idPicture, author,
-//                        ConvertClass.convertBitmapToString((image.drawable as BitmapDrawable).bitmap)))
+                favoritePictureRepository.deleteFavoritePicture(idPicture.toInt())
+            }
+            for(item in repo!!) {
+                println(item.id)
             }
         }
     }
