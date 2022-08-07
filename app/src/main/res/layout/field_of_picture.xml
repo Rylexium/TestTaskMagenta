@@ -25,6 +25,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingBottom="9dp"
+            android:foreground="?attr/selectableItemBackground"
             >
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -34,18 +35,23 @@
                     android:id="@+id/picture_progressbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="145dp"
-                    android:layout_marginStart="170dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTintMode="src_atop"
+                    android:indeterminateTint="?attr/colorPrimary"
                     android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/id_image_picture"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
+                    android:layout_marginStart="9dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginEnd="9dp"
+                    android:layout_marginBottom="9dp"
                     android:scaleType="fitXY"
-                    android:visibility="invisible"
-                    android:layout_margin="9dp"
-                    />
+                    android:visibility="invisible" />
             </RelativeLayout>
 
             <LinearLayout
