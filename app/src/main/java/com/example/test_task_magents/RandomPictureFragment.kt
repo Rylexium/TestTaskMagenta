@@ -42,7 +42,6 @@ class RandomPictureFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = RandomPictureFragmentBinding.inflate(inflater, container, false)
-        Toast.makeText(context, "Random", Toast.LENGTH_SHORT).show()
 
         initComponents()
 

@@ -32,7 +32,6 @@ class FavoritePictureFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FavoritePictureFragmentBinding.inflate(inflater, container, false)
-        Toast.makeText(context, "Favorite", Toast.LENGTH_SHORT).show()
 
         initComponents()
 
