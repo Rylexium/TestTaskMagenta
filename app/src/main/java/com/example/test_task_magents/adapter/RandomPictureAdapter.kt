@@ -1,6 +1,7 @@
 package com.example.test_task_magents.adapter
 
 
+import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -8,14 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.example.test_task_magents.*
 import com.example.test_task_magents.model.PictureData
 import kotlinx.coroutines.CoroutineScope
@@ -29,6 +36,7 @@ class RandomPictureAdapter(val context: Fragment, val pictureList:ArrayList<Pict
         val author = v.findViewById<TextView>(R.id.textview_author)
         val idPicture = v.findViewById<TextView>(R.id.textview_id_picture)
         val favoriteIcon = v.findViewById<ImageView>(R.id.icon_favorite)
+        val pictureProgressbar = v.findViewById<ProgressBar>(R.id.picture_progressbar)
     }
 
 
@@ -39,23 +47,48 @@ class RandomPictureAdapter(val context: Fragment, val pictureList:ArrayList<Pict
         return PictureViewHolder(v)
     }
 
-
     override fun onBindViewHolder(holder: PictureViewHolder, position: Int) {
         val newList = pictureList[position]
         holder.author.text = newList.author
         holder.idPicture.text = newList.id
+
+        holder.pictureProgressbar.visibility = View.VISIBLE
+
         Glide.with(context)
             .load(newList.url)
+            .error(R.drawable.ic_baseline_error_outline_24)
+            .listener(object : RequestListener<Drawable?> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable?>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    Toast.makeText(context.requireContext(), "Error in ${holder.idPicture.text}", Toast.LENGTH_SHORT).show()
+                    holder.pictureProgressbar.visibility = View.GONE
+                    holder.imagePicture.isEnabled = false
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable?>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    ViewCompat.animate(holder.imagePicture)
+                        .withStartAction { holder.imagePicture.visibility = View.VISIBLE }
+                        .alpha(1f)
+                        .setInterpolator(AccelerateDecelerateInterpolator())
+                        .setDuration(100)
+                        .start()
+                    return false
+                }
+            })
             .format(DecodeFormat.PREFER_RGB_565)
             .apply(RequestOptions.bitmapTransform(RoundedCorners(16)))
             .into(holder.imagePicture)
-
-        ViewCompat.animate(holder.imagePicture)
-            .withStartAction { holder.imagePicture.visibility = View.VISIBLE }
-            .alpha(1f)
-            .setInterpolator(AccelerateDecelerateInterpolator())
-            .setDuration(100)
-            .start()
 
         var isFavorite = false
         CoroutineScope(Dispatchers.IO).launch {

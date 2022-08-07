@@ -1,22 +1,26 @@
 package com.example.test_task_magents.adapter
 
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.example.test_task_magents.R
-import com.example.test_task_magents.RandomPictureFragment
 import com.example.test_task_magents.db.model.FavoritePicture
 import com.example.test_task_magents.downloadImage
 import com.example.test_task_magents.setFavorite
@@ -24,6 +28,7 @@ import com.example.test_task_magents.util.ConvertClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 class FavoritePictureAdapter(val context: Fragment, private val pictureList:ArrayList<FavoritePicture> )
     : RecyclerView.Adapter<FavoritePictureAdapter.PictureViewHolder>()  {
@@ -33,6 +38,7 @@ class FavoritePictureAdapter(val context: Fragment, private val pictureList:Arra
         val author = v.findViewById<TextView>(R.id.textview_author)
         val idPicture = v.findViewById<TextView>(R.id.textview_id_picture)
         val favoriteIcon = v.findViewById<ImageView>(R.id.icon_favorite)
+        val pictureProgressbar = v.findViewById<ProgressBar>(R.id.picture_progressbar)
     }
 
 
@@ -47,18 +53,44 @@ class FavoritePictureAdapter(val context: Fragment, private val pictureList:Arra
         val newList = pictureList[position]
         holder.author.text = newList.author
         holder.idPicture.text = newList.id.toString()
+
+        holder.pictureProgressbar.visibility = View.VISIBLE
+
         Glide.with(context)
             .load(ConvertClass.convertStringToBitmap(newList.picture))
+            .error(R.drawable.ic_baseline_error_outline_24)
+            .listener(object : RequestListener<Drawable?> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable?>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    holder.pictureProgressbar.visibility = View.GONE
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable?>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    holder.pictureProgressbar.visibility = View.GONE
+                    ViewCompat.animate(holder.imagePicture)
+                        .withStartAction { holder.imagePicture.visibility = View.VISIBLE }
+                        .alpha(1f)
+                        .setInterpolator(AccelerateDecelerateInterpolator())
+                        .setDuration(100)
+                        .start()
+                    return false
+                }
+            })
             .format(DecodeFormat.PREFER_RGB_565)
             .apply(RequestOptions.bitmapTransform(RoundedCorners(16)))
             .into(holder.imagePicture)
 
-        ViewCompat.animate(holder.imagePicture)
-            .withStartAction { holder.imagePicture.visibility = View.VISIBLE }
-            .alpha(1f)
-            .setInterpolator(AccelerateDecelerateInterpolator())
-            .setDuration(100)
-            .start()
 
         setFavorite(context, true, holder.favoriteIcon)
         holder.imagePicture.setOnClickListener {

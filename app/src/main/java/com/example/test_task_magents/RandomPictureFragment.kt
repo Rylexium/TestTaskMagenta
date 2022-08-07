@@ -93,7 +93,7 @@ class RandomPictureFragment : Fragment() {
         val page = pages[Random.nextInt(0, pages.size)]
         pages.remove(page)
 
-        val call : Call<List<GetPictureData>> = serviceApi.getPicture(page, 2)
+        val call : Call<List<GetPictureData>> = serviceApi.getPicture(page, 100)
 
         call.enqueue(object : Callback<List<GetPictureData>> {
             override fun onResponse(
