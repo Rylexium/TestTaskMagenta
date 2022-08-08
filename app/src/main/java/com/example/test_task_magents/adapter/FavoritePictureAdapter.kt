@@ -9,6 +9,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +36,7 @@ class FavoritePictureAdapter(val context: Fragment,
     : RecyclerView.Adapter<FavoritePictureAdapter.PictureViewHolder>()  {
 
     inner class PictureViewHolder(v: View):RecyclerView.ViewHolder(v) {
+        val fieldOfPicture = v.findViewById<CardView>(R.id.field_of_picture)
         val imagePicture = v.findViewById<ImageView>(R.id.id_image_picture)
         val author = v.findViewById<TextView>(R.id.textview_author)
         val idPicture = v.findViewById<TextView>(R.id.textview_id_picture)
@@ -94,7 +96,7 @@ class FavoritePictureAdapter(val context: Fragment,
 
 
         setFavorite(context, true, holder.favoriteIcon)
-        holder.imagePicture.setOnClickListener {
+        holder.fieldOfPicture.setOnClickListener {
             pictureList.removeAt(position)
             notifyDataSetChanged()
             CoroutineScope(Dispatchers.Unconfined).launch {
