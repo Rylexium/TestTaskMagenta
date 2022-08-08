@@ -24,6 +24,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.example.test_task_magents.*
+import com.example.test_task_magents.util.workWith.checkFavoritePicture
+import com.example.test_task_magents.util.workWith.downloadImage
+import com.example.test_task_magents.util.workWith.setFavorite
 import com.example.test_task_magents.model.PictureData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

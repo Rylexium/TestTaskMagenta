@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test_task_magents.adapter.FavoritePictureAdapter
+import com.example.test_task_magents.util.workWith.getAllFavoritePicture
 import com.example.test_task_magents.databinding.FavoritePictureFragmentBinding
 import com.example.test_task_magents.db.model.FavoritePicture
 import kotlinx.coroutines.*

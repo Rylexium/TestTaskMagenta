@@ -80,8 +80,9 @@
                 </LinearLayout>
                 <ImageView
                     android:id="@+id/icon_favorite"
-                    android:layout_width="50dp"
-                    android:layout_height="44dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
                     android:foregroundGravity="right"
                     android:src="@drawable/ic_baseline_favorite_border_24"
                     />

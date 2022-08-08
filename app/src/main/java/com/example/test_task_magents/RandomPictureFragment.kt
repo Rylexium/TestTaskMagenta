@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test_task_magents.adapter.RandomPictureAdapter
+import com.example.test_task_magents.util.workWith.getAllFavoritePicture
 import com.example.test_task_magents.databinding.RandomPictureFragmentBinding
 import com.example.test_task_magents.model.GetPictureData
 import com.example.test_task_magents.model.PictureData
@@ -22,7 +23,6 @@ import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.random.Random
 
 
 class RandomPictureFragment : Fragment() {
