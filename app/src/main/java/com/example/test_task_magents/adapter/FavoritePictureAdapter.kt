@@ -109,10 +109,11 @@ class FavoritePictureAdapter(val context: Fragment,
         }
     }
     private fun findPictureById(id : String) : Int {
-        val index = 0
+        var index = 0
         for(item in pictureList) {
             if(item.id.toString() == id)
                 return index
+            index += 1
         }
         return index
     }
