@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FavoritePictureFragment">
+    tools:context=".activity.picture.fragment.favorite.FavoritePictureFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favorite_picture_recycler_view"

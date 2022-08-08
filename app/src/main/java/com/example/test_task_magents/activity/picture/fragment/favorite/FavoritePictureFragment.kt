@@ -1,4 +1,4 @@
-package com.example.test_task_magents
+package com.example.test_task_magents.activity.picture.fragment.favorite
 
 import android.os.Bundle
 import android.os.Handler

@@ -33,7 +33,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class RandomPictureAdapter(val context: Fragment, val pictureList:ArrayList<PictureData> ) : RecyclerView.Adapter<RandomPictureAdapter.PictureViewHolder>() {
+class RandomPictureAdapter(
+    val context: Fragment,
+    private val pictureList: MutableList<PictureData>
+)
+    : RecyclerView.Adapter<RandomPictureAdapter.PictureViewHolder>() {
+
     inner class PictureViewHolder(v: View):RecyclerView.ViewHolder(v) {
         val imagePicture = v.findViewById<ImageView>(R.id.id_image_picture)
         val author = v.findViewById<TextView>(R.id.textview_author)

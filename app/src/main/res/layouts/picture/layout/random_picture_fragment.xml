@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RandomPictureFragment">
+    tools:context=".activity.picture.fragment.random.RandomPictureFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/random_picture_recycler_view"
