@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class PictureActivity : AppCompatActivity() {
 
     private lateinit var tabLayout : TabLayout
     private lateinit var viewPager2 : ViewPager2
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         viewPager2 = findViewById(R.id.viewPager2)
 
         CoroutineScope(Dispatchers.IO).launch {
-            initDatabase(this@MainActivity.applicationContext)
+            initDatabase(this@PictureActivity.applicationContext)
         }
 
         viewPager2.adapter =

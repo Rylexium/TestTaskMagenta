@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestTaskMagents">
         <activity
-            android:name=".activity.picture.MainActivity"
+            android:name=".activity.picture.PictureActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
