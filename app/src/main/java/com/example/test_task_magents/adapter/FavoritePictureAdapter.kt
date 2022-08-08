@@ -59,6 +59,7 @@ class FavoritePictureAdapter(val context: Fragment,
 
         holder.pictureProgressbar.visibility = View.VISIBLE
 
+        //влепить suspend
         Glide.with(context)
             .load(ConvertClass.convertStringToBitmap(newList.picture))
             .error(R.drawable.ic_baseline_error_outline_24)
@@ -97,14 +98,24 @@ class FavoritePictureAdapter(val context: Fragment,
 
         setFavorite(context, true, holder.favoriteIcon)
         holder.fieldOfPicture.setOnClickListener {
-            notifyItemRemoved(position)
-            pictureList.removeAt(position)
+            val index = findPictureById(holder.idPicture.text.toString())
+
+            pictureList.removeAt(index)
+            notifyItemRemoved(index)
+            // потом по этому id искать в рандоме пикчу и ставить у неё favorite=false
             CoroutineScope(Dispatchers.Unconfined).launch {
                 downloadImage(false, holder.idPicture.text.toString(), holder.author.text.toString(), holder.imagePicture)
             }
         }
     }
-
+    private fun findPictureById(id : String) : Int {
+        val index = 0
+        for(item in pictureList) {
+            if(item.id.toString() == id)
+                return index
+        }
+        return index
+    }
     override fun getItemCount(): Int {
         return pictureList.size
     }
