@@ -15,14 +15,13 @@ import com.example.test_task_magents.adapter.RandomPictureAdapter
 import com.example.test_task_magents.databinding.RandomPictureFragmentBinding
 import com.example.test_task_magents.model.GetPictureData
 import com.example.test_task_magents.model.PictureData
-import com.example.test_task_magents.retrofit.RetrofitIntenace
+import com.example.test_task_magents.retrofit.RetrofitInstance
 import com.example.test_task_magents.retrofit.ServiceApi
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.random.Random
 
 
 class RandomPictureFragment : Fragment() {
@@ -88,12 +87,12 @@ class RandomPictureFragment : Fragment() {
 
         binding.progressDownloadPicture.visibility = View.VISIBLE
 
-        val serviceApi = RetrofitIntenace.getRetrofit().create(ServiceApi::class.java)
+        val serviceApi = RetrofitInstance.getRetrofit()?.create(ServiceApi::class.java)
 
-        val page = pages[(0..pages.size).random()]
+        val page = pages[(0 until pages.size).random()]
         pages.remove(page)
 
-        val call : Call<List<GetPictureData>> = serviceApi.getPicture(page, 100)
+        val call : Call<List<GetPictureData>> = serviceApi!!.getPicture(page, 100)
 
         call.enqueue(object : Callback<List<GetPictureData>> {
             override fun onResponse(
