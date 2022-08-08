@@ -19,7 +19,7 @@ suspend fun initDatabase(context : Context) {
     }
 }
 
-suspend fun getAllFavoritePicture() : List<FavoritePicture>{
+suspend fun getAllFavoritePicture() : List<FavoritePicture> {
     return suspendCoroutine {
         repo = favoritePictureRepository.allFavoritePicture
         it.resume(repo!!)

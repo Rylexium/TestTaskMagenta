@@ -30,7 +30,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class FavoritePictureAdapter(val context: Fragment, private val pictureList:ArrayList<FavoritePicture> )
+class FavoritePictureAdapter(val context: Fragment,
+                             private val pictureList: MutableList<FavoritePicture>)
     : RecyclerView.Adapter<FavoritePictureAdapter.PictureViewHolder>()  {
 
     inner class PictureViewHolder(v: View):RecyclerView.ViewHolder(v) {

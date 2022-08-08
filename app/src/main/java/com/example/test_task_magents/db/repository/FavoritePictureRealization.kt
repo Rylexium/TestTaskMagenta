@@ -1,6 +1,5 @@
 package com.example.test_task_magents.db.repository
 
-import androidx.lifecycle.LiveData
 import com.example.test_task_magents.db.dao.FavoritePictureDao
 import com.example.test_task_magents.db.model.FavoritePicture
 

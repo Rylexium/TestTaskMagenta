@@ -16,7 +16,6 @@ import kotlin.coroutines.suspendCoroutine
 
 class RandomPictureViewModel : ViewModel() {
     private var liveDataPictureList : MutableLiveData<MutableList<PictureData>> = MutableLiveData()
-    private var pictureList = ArrayList<PictureData>()
     private val pages : MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     private val serviceApi : ServiceApi? = RetrofitInstance.getRetrofit()?.create(ServiceApi::class.java)
     private var state: Parcelable? = null
@@ -44,11 +43,15 @@ class RandomPictureViewModel : ViewModel() {
             call.enqueue(object : Callback<List<GetPictureData>> {
                 override fun onResponse(call: Call<List<GetPictureData>>,
                                         response: Response<List<GetPictureData>>) {
+                    val downloadList = ArrayList<PictureData>()
 
                     for(picture in response.body()!!)
-                        pictureList.add(PictureData(picture.id, picture.author, picture.download_url))
+                        downloadList.add(PictureData(picture.id, picture.author, picture.download_url))
 
-                    liveDataPictureList.value = pictureList
+                    if(liveDataPictureList.value != null)
+                        downloadList.addAll(liveDataPictureList.value!!)
+
+                    liveDataPictureList.value = downloadList
                     it.resume(true)
                 }
 
