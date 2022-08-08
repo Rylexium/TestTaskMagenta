@@ -22,6 +22,7 @@ import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.random.Random
 
 
 class RandomPictureFragment : Fragment() {
@@ -89,7 +90,7 @@ class RandomPictureFragment : Fragment() {
 
         val serviceApi = RetrofitInstance.getRetrofit()?.create(ServiceApi::class.java)
 
-        val page = pages[(0 until pages.size).random()]
+        val page = pages[(System.currentTimeMillis() % pages.size).toInt()] // Random не подходите, т.к генит одну и ту же последовательность
         pages.remove(page)
 
         val call : Call<List<GetPictureData>> = serviceApi!!.getPicture(page, 100)
