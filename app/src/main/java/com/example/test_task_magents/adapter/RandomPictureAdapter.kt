@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +41,7 @@ class RandomPictureAdapter(
     : RecyclerView.Adapter<RandomPictureAdapter.PictureViewHolder>() {
 
     inner class PictureViewHolder(v: View):RecyclerView.ViewHolder(v) {
+        val fieldOfPicture = v.findViewById<CardView>(R.id.field_of_picture)
         val imagePicture = v.findViewById<ImageView>(R.id.id_image_picture)
         val author = v.findViewById<TextView>(R.id.textview_author)
         val idPicture = v.findViewById<TextView>(R.id.textview_id_picture)
@@ -106,7 +108,7 @@ class RandomPictureAdapter(
             }
         }
 
-        holder.imagePicture.setOnClickListener {
+        holder.fieldOfPicture.setOnClickListener {
             isFavorite = !isFavorite
             setFavorite(context, isFavorite, holder.favoriteIcon)
             CoroutineScope(Dispatchers.Unconfined).launch {
