@@ -3,7 +3,7 @@ package com.example.test_task_magents
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
-import com.example.test_task_magents.adapter.FragmentAdapter
+import com.example.test_task_magents.adapter.PictureFragmentAdapter
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +28,11 @@ class MainActivity : AppCompatActivity() {
             initDatabase(this@MainActivity.applicationContext)
         }
 
-        viewPager2.adapter = FragmentAdapter(supportFragmentManager, lifecycle)
+        viewPager2.adapter =
+            PictureFragmentAdapter(
+                supportFragmentManager,
+                lifecycle
+            )
 
         tabLayout.addTab(tabLayout.newTab().setText("Рандомные картинки"))
         tabLayout.addTab(tabLayout.newTab().setText("Любимые картинки"))

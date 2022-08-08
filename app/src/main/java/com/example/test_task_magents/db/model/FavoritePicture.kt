@@ -8,4 +8,5 @@ data class FavoritePicture(
     @PrimaryKey(autoGenerate = false)
     val id: Int,
     val author: String,
-    val picture: String)
+    val picture: String?
+)

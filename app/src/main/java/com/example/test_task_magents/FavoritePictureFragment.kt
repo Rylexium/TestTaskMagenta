@@ -6,18 +6,13 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test_task_magents.adapter.FavoritePictureAdapter
-import com.example.test_task_magents.adapter.RandomPictureAdapter
 import com.example.test_task_magents.databinding.FavoritePictureFragmentBinding
 import com.example.test_task_magents.db.model.FavoritePicture
-import com.example.test_task_magents.util.ConvertClass
 import kotlinx.coroutines.*
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class FavoritePictureFragment : Fragment() {
     private var _binding: FavoritePictureFragmentBinding? = null
@@ -76,7 +71,7 @@ class FavoritePictureFragment : Fragment() {
 
 
             for (picture in data)
-                addFieldFavoritePicture(picture.id.toString(), picture.author, picture.picture)
+                addFieldFavoritePicture(picture.id.toString(), picture.author, picture.picture.toString())
 
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.progressDownloadPicture.visibility = View.GONE

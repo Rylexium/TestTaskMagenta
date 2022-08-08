@@ -1,8 +1,6 @@
 package com.example.test_task_magents
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
