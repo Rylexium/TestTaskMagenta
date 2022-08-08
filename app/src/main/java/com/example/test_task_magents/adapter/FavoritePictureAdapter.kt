@@ -2,6 +2,8 @@ package com.example.test_task_magents.adapter
 
 
 import android.graphics.drawable.Drawable
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,41 +61,45 @@ class FavoritePictureAdapter(val context: Fragment,
 
         holder.pictureProgressbar.visibility = View.VISIBLE
 
-        //влепить suspend
-        Glide.with(context)
-            .load(ConvertClass.convertStringToBitmap(newList.picture))
-            .error(R.drawable.ic_baseline_error_outline_24)
-            .listener(object : RequestListener<Drawable?> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable?>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    holder.pictureProgressbar.visibility = View.GONE
-                    return false
-                }
+        CoroutineScope(Dispatchers.IO).launch {
+            val imageBitmap = ConvertClass.convertStringToBitmap(newList.picture)
+            Handler(Looper.getMainLooper()).post {
+                Glide.with(context)
+                    .load(imageBitmap)
+                    .error(R.drawable.ic_baseline_error_outline_24)
+                    .listener(object : RequestListener<Drawable?> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable?>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            holder.pictureProgressbar.visibility = View.GONE
+                            return false
+                        }
 
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable?>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    holder.pictureProgressbar.visibility = View.GONE
-                    ViewCompat.animate(holder.imagePicture)
-                        .withStartAction { holder.imagePicture.visibility = View.VISIBLE }
-                        .alpha(1f)
-                        .setInterpolator(AccelerateDecelerateInterpolator())
-                        .setDuration(100)
-                        .start()
-                    return false
-                }
-            })
-            .format(DecodeFormat.PREFER_RGB_565)
-            .apply(RequestOptions.bitmapTransform(RoundedCorners(16)))
-            .into(holder.imagePicture)
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable?>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            holder.pictureProgressbar.visibility = View.GONE
+                            ViewCompat.animate(holder.imagePicture)
+                                .withStartAction { holder.imagePicture.visibility = View.VISIBLE }
+                                .alpha(1f)
+                                .setInterpolator(AccelerateDecelerateInterpolator())
+                                .setDuration(100)
+                                .start()
+                            return false
+                        }
+                    })
+                    .format(DecodeFormat.PREFER_RGB_565)
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(16)))
+                    .into(holder.imagePicture)
+            }
+        }
 
 
         setFavorite(context, true, holder.favoriteIcon)
@@ -102,7 +108,10 @@ class FavoritePictureAdapter(val context: Fragment,
 
             pictureList.removeAt(index)
             notifyItemRemoved(index)
+
             // потом по этому id искать в рандоме пикчу и ставить у неё favorite=false
+
+
             CoroutineScope(Dispatchers.Unconfined).launch {
                 downloadImage(false, holder.idPicture.text.toString(), holder.author.text.toString(), holder.imagePicture)
             }
