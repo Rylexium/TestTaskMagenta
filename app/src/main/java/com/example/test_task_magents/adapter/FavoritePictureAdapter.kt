@@ -97,8 +97,8 @@ class FavoritePictureAdapter(val context: Fragment,
 
         setFavorite(context, true, holder.favoriteIcon)
         holder.fieldOfPicture.setOnClickListener {
+            notifyItemRemoved(position)
             pictureList.removeAt(position)
-            notifyDataSetChanged()
             CoroutineScope(Dispatchers.Unconfined).launch {
                 downloadImage(false, holder.idPicture.text.toString(), holder.author.text.toString(), holder.imagePicture)
             }

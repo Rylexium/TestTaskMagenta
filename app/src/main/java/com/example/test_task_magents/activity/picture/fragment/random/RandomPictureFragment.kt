@@ -69,12 +69,12 @@ class RandomPictureFragment : Fragment() {
         }
 
         snackbar = Snackbar.make(recv, "Картинки закончились(((", Snackbar.LENGTH_LONG)
-                                .setAction("Любимые картинки") {
-                                    Toast.makeText(context, "Свайпни вправо))", Toast.LENGTH_SHORT).show()
-                                }
-                                .setTextColor(Color.parseColor("#fdfffe"))
-                                .setBackgroundTint(Color.parseColor("#555555"))
-                                .setActionTextColor(Color.parseColor("#fdfffe"))
+            .setAction("Любимые картинки") {
+                Toast.makeText(context, "Свайпни вправо))", Toast.LENGTH_SHORT).show()
+            }
+            .setTextColor(Color.parseColor("#fdfffe"))
+            .setBackgroundTint(Color.parseColor("#555555"))
+            .setActionTextColor(Color.parseColor("#fdfffe"))
     }
 
     private fun applyEvents() {

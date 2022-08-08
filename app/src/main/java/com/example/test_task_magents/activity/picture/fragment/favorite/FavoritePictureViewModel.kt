@@ -15,7 +15,6 @@ import kotlin.coroutines.suspendCoroutine
 
 class FavoritePictureViewModel : ViewModel() {
     private var favoritePictureList : MutableLiveData<MutableList<FavoritePicture>> = MutableLiveData()
-    private var previousHashCodeFavoritePictureList : Int = 1
     private var state: Parcelable? = null
 
     fun setScrollState(state: Parcelable?) {
@@ -31,9 +30,6 @@ class FavoritePictureViewModel : ViewModel() {
     }
 
     suspend fun selectFavoritePicturesFromDB(): MutableList<FavoritePicture>? {
-        if(previousHashCodeFavoritePictureList == favoritePictureList.value.hashCode()) // список не поменялся
-            return null
-
         return suspendCoroutine {
             var data : List<FavoritePicture>?
             CoroutineScope(Dispatchers.IO).launch {
@@ -45,7 +41,6 @@ class FavoritePictureViewModel : ViewModel() {
                         selectedListFromDB.add(FavoritePicture(picture.id, picture.author, picture.picture))
                     Handler(Looper.getMainLooper()).post {
                         favoritePictureList.value = selectedListFromDB
-                        previousHashCodeFavoritePictureList = favoritePictureList.value.hashCode()
                     }
                     it.resume(favoritePictureList.value)
                 }

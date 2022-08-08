@@ -1,8 +1,11 @@
 package com.example.test_task_magents.activity.picture.fragment.favorite
 
+import android.animation.LayoutTransition
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test_task_magents.adapter.FavoritePictureAdapter
 import com.example.test_task_magents.databinding.FavoritePictureFragmentBinding
-import com.example.test_task_magents.db.model.FavoritePicture
 import kotlinx.coroutines.*
 
 class FavoritePictureFragment : Fragment() {
