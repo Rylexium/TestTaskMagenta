@@ -48,9 +48,17 @@ class RandomPictureFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        if(recv.layoutManager != null)
+            (recv.layoutManager as LinearLayoutManager) //скролим до нужного момента
+                .onRestoreInstanceState(viewModel.getScrollState())
         CoroutineScope(Dispatchers.IO).launch {
             getAllFavoritePicture()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.setScrollState(recv.layoutManager?.onSaveInstanceState())
     }
 
     override fun onDestroy() {

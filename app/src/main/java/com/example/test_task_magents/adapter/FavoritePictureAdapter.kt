@@ -121,6 +121,10 @@ class FavoritePictureAdapter(val context: Fragment,
     private fun updateStatusFavoritePictureById(id : String) {
         val listRandomPicture = RandomPictureViewModel.liveDataPictureList.value
         val indexPicture = findPictureById(id, listRandomPicture)
+
+        if(indexPicture == -1)
+            return //такой картинки нет в cache'е
+
         val pictureData = listRandomPicture!![indexPicture]
 
         listRandomPicture.removeAt(indexPicture)
