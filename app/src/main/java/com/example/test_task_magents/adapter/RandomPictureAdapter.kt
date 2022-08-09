@@ -115,7 +115,7 @@ class RandomPictureAdapter(
                 Glide.with(context)
                     .load(R.drawable.ic_baseline_error_outline_24)
                     .format(DecodeFormat.PREFER_RGB_565)
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(16)))
+                    .apply(RequestOptions.overrideOf(150, 150))
                     .into(holder.imagePicture)
                 return@setOnClickListener
             }
