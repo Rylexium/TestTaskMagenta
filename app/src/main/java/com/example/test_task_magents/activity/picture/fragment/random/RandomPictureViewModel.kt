@@ -15,7 +15,9 @@ import kotlin.coroutines.suspendCoroutine
 
 
 class RandomPictureViewModel : ViewModel() {
-    private var liveDataPictureList : MutableLiveData<MutableList<PictureData>> = MutableLiveData()
+    companion object {
+         var liveDataPictureList: MutableLiveData<MutableList<PictureData>> = MutableLiveData()
+    }
     private val pages : MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     private val serviceApi : ServiceApi? = RetrofitInstance.getRetrofit()?.create(ServiceApi::class.java)
     private var state: Parcelable? = null

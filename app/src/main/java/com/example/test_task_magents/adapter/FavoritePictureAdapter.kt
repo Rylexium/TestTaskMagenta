@@ -24,10 +24,12 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.example.test_task_magents.R
-import com.example.test_task_magents.util.workWith.downloadImage
-import com.example.test_task_magents.util.workWith.setFavorite
+import com.example.test_task_magents.activity.picture.fragment.random.RandomPictureFragment
+import com.example.test_task_magents.activity.picture.fragment.random.RandomPictureViewModel
 import com.example.test_task_magents.db.model.FavoritePicture
+import com.example.test_task_magents.model.PictureData
 import com.example.test_task_magents.util.ConvertClass
+import com.example.test_task_magents.util.workWith.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -104,20 +106,33 @@ class FavoritePictureAdapter(val context: Fragment,
 
         setFavorite(context, true, holder.favoriteIcon)
         holder.fieldOfPicture.setOnClickListener {
-            val index = findPictureById(holder.idPicture.text.toString())
+            val index = findFavoritePictureById(holder.idPicture.text.toString())
 
             pictureList.removeAt(index)
             notifyItemRemoved(index)
 
-            // потом по этому id искать в рандоме пикчу и ставить у неё favorite=false
-
-
             CoroutineScope(Dispatchers.Unconfined).launch {
                 downloadImage(false, holder.idPicture.text.toString(), holder.author.text.toString(), holder.imagePicture)
+                updateStatusFavoritePictureById(holder.idPicture.text.toString())
             }
         }
     }
-    private fun findPictureById(id : String) : Int {
+
+    private fun updateStatusFavoritePictureById(id : String) {
+        val listRandomPicture = RandomPictureViewModel.liveDataPictureList.value
+        val indexPicture = findPictureById(id, listRandomPicture)
+        val pictureData = listRandomPicture!![indexPicture]
+
+        listRandomPicture.removeAt(indexPicture)
+
+        listRandomPicture.add(indexPicture, PictureData(pictureData.id, pictureData.author, pictureData.url))
+
+        RandomPictureViewModel.liveDataPictureList.postValue(listRandomPicture)
+        deleteFavoritePicture(pictureData.id.toInt())
+        RandomPictureFragment.randomPictureAdapter.notifyDataSetChanged()
+    }
+
+    private fun findFavoritePictureById(id : String) : Int {
         var index = 0
         for(item in pictureList) {
             if(item.id.toString() == id)
@@ -125,6 +140,16 @@ class FavoritePictureAdapter(val context: Fragment,
             index += 1
         }
         return index
+    }
+    private fun findPictureById(id: String, listRandomPicture: MutableList<PictureData>?) : Int {
+        var index = 0
+        for (picture in listRandomPicture!!) {
+            if (picture.id == id) {
+                return index
+            }
+            index += 1
+        }
+        return -1
     }
     override fun getItemCount(): Int {
         return pictureList.size

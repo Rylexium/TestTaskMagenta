@@ -26,7 +26,9 @@ class RandomPictureFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var recv : RecyclerView
-    private lateinit var randomPictureAdapter: RandomPictureAdapter
+    companion object {
+        lateinit var randomPictureAdapter: RandomPictureAdapter
+    }
     private lateinit var snackbar: Snackbar
     private lateinit var viewModel : RandomPictureViewModel
 

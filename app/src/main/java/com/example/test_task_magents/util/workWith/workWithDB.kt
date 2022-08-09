@@ -21,18 +21,30 @@ suspend fun initDatabase(context : Context) {
 
 suspend fun getAllFavoritePicture() : List<FavoritePicture> {
     return suspendCoroutine {
-        repo = favoritePictureRepository.allFavoritePicture
-        it.resume(repo!!)
+        favoritePictureList = favoritePictureRepository.allFavoritePicture
+        it.resume(favoritePictureList!!)
     }
 }
 
-private var repo: List<FavoritePicture>? = null
+fun deleteFavoritePicture(id : Int) {
+    val list = ArrayList(favoritePictureList!!)
+    for(picture in list) {
+        if(picture.id == id) {
+            list.remove(picture)
+            break
+        }
+    }
+    favoritePictureList = list
+}
+
+private var favoritePictureList: List<FavoritePicture>? = null
+
 suspend fun checkFavoritePicture(id: Int) : Boolean {
     return suspendCoroutine {
-        if(repo == null)
-            repo = favoritePictureRepository.allFavoritePicture
+        if(favoritePictureList == null)
+            favoritePictureList = favoritePictureRepository.allFavoritePicture
 
-        for(picture in repo!!) {
+        for(picture in favoritePictureList!!) {
             if(id == picture.id){
                 it.resume(true)
                 return@suspendCoroutine
