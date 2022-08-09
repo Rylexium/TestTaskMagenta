@@ -53,7 +53,7 @@ class RandomPictureViewModel : ViewModel() {
                     if(liveDataPictureList.value != null)
                         downloadList.addAll(liveDataPictureList.value!!)
 
-
+                    downloadList.shuffle()
                     liveDataPictureList.value = downloadList
                     it.resume(true)
                 }
