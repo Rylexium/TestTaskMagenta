@@ -27,7 +27,7 @@ class RandomPictureFragment : Fragment() {
 
     private lateinit var recv : RecyclerView
     companion object {
-        lateinit var randomPictureAdapter: RandomPictureAdapter
+        lateinit var randomPictureAdapter: RandomPictureAdapter //static для обновления status favorite после удаления
     }
     private lateinit var snackbar: Snackbar
     private lateinit var viewModel : RandomPictureViewModel

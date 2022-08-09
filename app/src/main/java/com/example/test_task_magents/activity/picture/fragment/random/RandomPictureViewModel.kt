@@ -16,7 +16,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class RandomPictureViewModel : ViewModel() {
     companion object {
-         var liveDataPictureList: MutableLiveData<MutableList<PictureData>> = MutableLiveData()
+         var liveDataPictureList: MutableLiveData<MutableList<PictureData>> = MutableLiveData() //static для обновления status favorite после удаления
     }
     private val pages : MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     private val serviceApi : ServiceApi? = RetrofitInstance.getRetrofit()?.create(ServiceApi::class.java)
