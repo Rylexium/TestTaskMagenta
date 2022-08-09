@@ -63,7 +63,7 @@ class RandomPictureAdapter(
         holder.idPicture.text = newList.id
 
         holder.pictureProgressbar.visibility = View.VISIBLE
-
+        var isDownload = false
         Glide.with(context)
             .load(newList.url)
             .error(R.drawable.ic_baseline_error_outline_24)
@@ -77,6 +77,7 @@ class RandomPictureAdapter(
                     Toast.makeText(context.requireContext(), "Error in ${holder.idPicture.text}", Toast.LENGTH_SHORT).show()
                     holder.pictureProgressbar.visibility = View.GONE
                     holder.imagePicture.isEnabled = false
+                    isDownload = false
                     return false
                 }
 
@@ -93,6 +94,7 @@ class RandomPictureAdapter(
                         .setInterpolator(AccelerateDecelerateInterpolator())
                         .setDuration(100)
                         .start()
+                    isDownload = true
                     return false
                 }
             })
@@ -109,6 +111,14 @@ class RandomPictureAdapter(
         }
 
         holder.fieldOfPicture.setOnClickListener {
+            if(!isDownload) {
+                Glide.with(context)
+                    .load(R.drawable.ic_baseline_error_outline_24)
+                    .format(DecodeFormat.PREFER_RGB_565)
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(16)))
+                    .into(holder.imagePicture)
+                return@setOnClickListener
+            }
             isFavorite = !isFavorite
             setFavorite(context, isFavorite, holder.favoriteIcon)
             CoroutineScope(Dispatchers.Unconfined).launch {

@@ -35,7 +35,10 @@ class RandomPictureViewModel : ViewModel() {
     }
     suspend fun downloadPictures() : Boolean? {
         return suspendCoroutine {
-            if(pages.size == 0) it.resume(null)
+            if(pages.size == 0) {
+                it.resume(null)
+                return@suspendCoroutine
+            }
 
             val page = pages[(System.currentTimeMillis() % pages.size).toInt()] // Random не подходите, т.к генит одну и ту же последовательность
             pages.remove(page)
@@ -50,11 +53,17 @@ class RandomPictureViewModel : ViewModel() {
                     for(picture in response.body()!!)
                         downloadList.add(PictureData(picture.id, picture.author, picture.download_url))
 
-                    if(liveDataPictureList.value != null)
-                        downloadList.addAll(liveDataPictureList.value!!)
+                    downloadList.shuffle() //мешаем
 
-                    downloadList.shuffle()
-                    liveDataPictureList.value = downloadList
+                    val res : ArrayList<PictureData>?
+                    if(liveDataPictureList.value != null) {
+                        res = ArrayList(liveDataPictureList.value!!) //сначала кладём что есть
+                        res.addAll(downloadList) //добавляем скачанное
+                    }
+                    else res = downloadList // ещё ничего нет -> в res кладём скачанное
+
+                    liveDataPictureList.value = res!!
+
                     it.resume(true)
                 }
 

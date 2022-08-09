@@ -107,6 +107,7 @@ class RandomPictureFragment : Fragment() {
 
     private fun showPictures() {
         binding.progressDownloadPicture.visibility = View.VISIBLE
+        viewModel.setScrollState(recv.layoutManager?.onSaveInstanceState())
         viewModel.viewModelScope.launch {
             val pictures = viewModel.downloadPictures()
 
@@ -115,11 +116,13 @@ class RandomPictureFragment : Fragment() {
             else if (pictures == false)
                 Toast.makeText(context, "Что-то пошло не так при загрузке", Toast.LENGTH_SHORT)
                     .show()
-            Handler(Looper.getMainLooper()).postDelayed({
-                binding.progressDownloadPicture.visibility = View.GONE
-            }, System.currentTimeMillis() % 250)
 
             randomPictureAdapter.notifyDataSetChanged()
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.progressDownloadPicture.visibility = View.GONE
+                (recv.layoutManager as LinearLayoutManager) //скролим до нужного момента
+                    .onRestoreInstanceState(viewModel.getScrollState())
+            }, System.currentTimeMillis() % 250)
         }
     }
 }
