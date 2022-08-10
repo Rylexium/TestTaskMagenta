@@ -11,6 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
@@ -20,7 +21,7 @@ class RandomPictureViewModel : ViewModel() {
     }
     private val pages : MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     private val serviceApi : ServiceApi? = RetrofitInstance.getRetrofit()?.create(ServiceApi::class.java)
-    private val limit : Int = 100
+    private val limit : Int = 1
     private var state: Parcelable? = null
 
     fun getLimit() : Int {
@@ -42,7 +43,7 @@ class RandomPictureViewModel : ViewModel() {
     fun getLiveDataPictureList(): MutableLiveData<MutableList<PictureData>> {
         return liveDataPictureList
     }
-    suspend fun downloadPictures() : Boolean? {
+    suspend fun downloadPictures() : MutableList<PictureData>? {
         return suspendCoroutine {
             if(pages.size == 0) {
                 it.resume(null)
@@ -73,11 +74,11 @@ class RandomPictureViewModel : ViewModel() {
 
                     liveDataPictureList.value = res!!
 
-                    it.resume(true)
+                    it.resume(liveDataPictureList.value)
                 }
 
                 override fun onFailure(call: Call<List<GetPictureData>>, t: Throwable) {
-                    it.resume(false)
+                    it.resumeWithException(t)
                 }
             })
         }

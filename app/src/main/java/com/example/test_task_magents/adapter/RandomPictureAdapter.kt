@@ -77,7 +77,7 @@ class RandomPictureAdapter(
                 ): Boolean {
                     Toast.makeText(context.requireContext(), "Error in ${holder.idPicture.text}", Toast.LENGTH_SHORT).show()
                     AnimView.animGone(holder.pictureProgressbar, 100)
-                    holder.imagePicture.isEnabled = false
+                    AnimView.animVisible(holder.imagePicture, 100)
                     isDownload = false
                     return false
                 }
@@ -107,14 +107,9 @@ class RandomPictureAdapter(
         }
 
         holder.fieldOfPicture.setOnClickListener {
-            if(!isDownload) {
-                Glide.with(context)
-                    .load(R.drawable.ic_baseline_error_outline_24)
-                    .format(DecodeFormat.PREFER_RGB_565)
-                    .apply(RequestOptions.overrideOf(150, 150))
-                    .into(holder.imagePicture)
+            if(!isDownload)
                 return@setOnClickListener
-            }
+
             isFavorite = !isFavorite
             setFavorite(context, isFavorite, holder.favoriteIcon)
             CoroutineScope(Dispatchers.Unconfined).launch {

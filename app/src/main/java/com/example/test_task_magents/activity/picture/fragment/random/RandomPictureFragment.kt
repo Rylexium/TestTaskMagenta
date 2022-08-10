@@ -110,13 +110,17 @@ class RandomPictureFragment : Fragment() {
         AnimView.animVisible(binding.progressDownloadPicture, 100)
         viewModel.setScrollState(recv.layoutManager?.onSaveInstanceState())
         viewModel.viewModelScope.launch {
-            val pictures = viewModel.downloadPictures()
-
-            if (pictures == null && !snackbar.isShown)
-                snackbar.show()
-            else if (pictures == false)
+            try {
+                val pictures = viewModel.downloadPictures()
+                if (pictures == null && !snackbar.isShown) {
+                    snackbar.show()
+                    return@launch
+                }
+            } catch (t : Throwable){
                 Toast.makeText(context, "Что-то пошло не так при загрузке", Toast.LENGTH_SHORT)
                     .show()
+                return@launch
+            }
 
             randomPictureAdapter.notifyItemRangeInserted(
                     (10 - viewModel.getListPagesSize()) * viewModel.getLimit(),
