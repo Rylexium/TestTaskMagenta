@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.test_task_magents.adapter.FavoritePictureAdapter
 import com.example.test_task_magents.databinding.FavoritePictureFragmentBinding
+import com.example.test_task_magents.util.AnimView
 import kotlinx.coroutines.*
 
 class FavoritePictureFragment : Fragment() {
@@ -61,11 +62,11 @@ class FavoritePictureFragment : Fragment() {
 
 
     private fun showFavoritePictures() {
-        binding.progressDownloadPicture.visibility = View.VISIBLE
+        AnimView.animVisible(binding.progressDownloadPicture, 100)
         viewModel.viewModelScope.launch {
             viewModel.selectFavoritePicturesFromDB()
             Handler(Looper.getMainLooper()).postDelayed({
-                binding.progressDownloadPicture.visibility = View.GONE
+                AnimView.animGone(binding.progressDownloadPicture, 100)
             }, System.currentTimeMillis() % 250)
         }
     }

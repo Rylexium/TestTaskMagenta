@@ -29,6 +29,7 @@ import com.example.test_task_magents.util.workWith.checkFavoritePicture
 import com.example.test_task_magents.util.workWith.downloadImage
 import com.example.test_task_magents.util.workWith.setFavorite
 import com.example.test_task_magents.model.PictureData
+import com.example.test_task_magents.util.AnimView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -62,7 +63,7 @@ class RandomPictureAdapter(
         holder.author.text = newList.author
         holder.idPicture.text = newList.id
 
-        holder.pictureProgressbar.visibility = View.VISIBLE
+        AnimView.animVisible(holder.pictureProgressbar, 100)
         var isDownload = false
         Glide.with(context)
             .load(newList.url)
@@ -75,7 +76,7 @@ class RandomPictureAdapter(
                     isFirstResource: Boolean
                 ): Boolean {
                     Toast.makeText(context.requireContext(), "Error in ${holder.idPicture.text}", Toast.LENGTH_SHORT).show()
-                    holder.pictureProgressbar.visibility = View.GONE
+                    AnimView.animGone(holder.pictureProgressbar, 100)
                     holder.imagePicture.isEnabled = false
                     isDownload = false
                     return false
@@ -88,12 +89,7 @@ class RandomPictureAdapter(
                     dataSource: DataSource?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    ViewCompat.animate(holder.imagePicture)
-                        .withStartAction { holder.imagePicture.visibility = View.VISIBLE }
-                        .alpha(1f)
-                        .setInterpolator(AccelerateDecelerateInterpolator())
-                        .setDuration(100)
-                        .start()
+                    AnimView.animVisible(holder.imagePicture, 100)
                     isDownload = true
                     return false
                 }

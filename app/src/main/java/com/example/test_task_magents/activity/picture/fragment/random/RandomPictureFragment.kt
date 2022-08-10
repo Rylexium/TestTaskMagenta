@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.test_task_magents.adapter.RandomPictureAdapter
 import com.example.test_task_magents.util.workWith.getAllFavoritePicture
 import com.example.test_task_magents.databinding.RandomPictureFragmentBinding
+import com.example.test_task_magents.util.AnimView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 
@@ -102,11 +103,11 @@ class RandomPictureFragment : Fragment() {
         if(viewModel.getLiveDataPictureList().value == null) //впервые открыли -> качаем картинки
             showPictures()
         else
-            binding.progressDownloadPicture.visibility = View.GONE //уже есть картинки -> убрать прогресс бар
+            AnimView.animGone(binding.progressDownloadPicture, 100) //уже есть картинки -> убрать прогресс бар
     }
 
     private fun showPictures() {
-        binding.progressDownloadPicture.visibility = View.VISIBLE
+        AnimView.animVisible(binding.progressDownloadPicture, 100)
         viewModel.setScrollState(recv.layoutManager?.onSaveInstanceState())
         viewModel.viewModelScope.launch {
             val pictures = viewModel.downloadPictures()
@@ -117,9 +118,12 @@ class RandomPictureFragment : Fragment() {
                 Toast.makeText(context, "Что-то пошло не так при загрузке", Toast.LENGTH_SHORT)
                     .show()
 
-            randomPictureAdapter.notifyDataSetChanged()
+            randomPictureAdapter.notifyItemRangeInserted(
+                    (10 - viewModel.getListPagesSize()) * viewModel.getLimit(),
+                viewModel.getLimit())
+
             Handler(Looper.getMainLooper()).postDelayed({
-                binding.progressDownloadPicture.visibility = View.GONE
+                AnimView.animGone(binding.progressDownloadPicture, 100)
                 (recv.layoutManager as LinearLayoutManager) //скролим до нужного момента
                     .onRestoreInstanceState(viewModel.getScrollState())
             }, System.currentTimeMillis() % 250)

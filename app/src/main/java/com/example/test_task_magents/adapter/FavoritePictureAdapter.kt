@@ -133,7 +133,7 @@ class FavoritePictureAdapter(val context: Fragment,
 
         RandomPictureViewModel.liveDataPictureList.postValue(listRandomPicture)
         deleteFavoritePicture(pictureData.id.toInt())
-        RandomPictureFragment.randomPictureAdapter.notifyDataSetChanged()
+        RandomPictureFragment.randomPictureAdapter.notifyItemInserted(indexPicture)
     }
 
     private fun findFavoritePictureById(id : String) : Int {

@@ -20,7 +20,16 @@ class RandomPictureViewModel : ViewModel() {
     }
     private val pages : MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     private val serviceApi : ServiceApi? = RetrofitInstance.getRetrofit()?.create(ServiceApi::class.java)
+    private val limit : Int = 100
     private var state: Parcelable? = null
+
+    fun getLimit() : Int {
+        return limit
+    }
+
+    fun getListPagesSize(): Int {
+        return pages.size
+    }
 
     fun setScrollState(state: Parcelable?) {
         this.state = state
@@ -43,7 +52,7 @@ class RandomPictureViewModel : ViewModel() {
             val page = pages[(System.currentTimeMillis() % pages.size).toInt()] // Random не подходите, т.к генит одну и ту же последовательность
             pages.remove(page)
 
-            val call : Call<List<GetPictureData>> = serviceApi!!.getPicture(page, 100)
+            val call : Call<List<GetPictureData>> = serviceApi!!.getPicture(page, limit)
 
             call.enqueue(object : Callback<List<GetPictureData>> {
                 override fun onResponse(call: Call<List<GetPictureData>>,
